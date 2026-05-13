@@ -1,0 +1,38 @@
+# Python virtual environments
+venv/
+.venv/
+
+# Environment files
+.env
+.env.*
+C:\Users\haard\Downloads\response-ai-v2\backend\.env
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Distribution/build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local JSON and lock files
+*.json

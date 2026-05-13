@@ -11,3 +11,6 @@ passlib[bcrypt]
 python-multipart
 asyncpg
 pydantic-settings
+httpx
+alembic
+python-dotenv
