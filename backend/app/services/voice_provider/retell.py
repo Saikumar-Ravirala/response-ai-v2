@@ -1,6 +1,7 @@
 import hmac
 import hashlib
 import json
+import httpx
 from typing import List, Dict, Any, Optional
 from services.voice_provider.base import VoiceProviderService
 from schemas.call import UnifiedCall
@@ -19,23 +20,57 @@ class RetellProvider(VoiceProviderService):
         }
 
     async def list_agents(self) -> List[Dict[str, Any]]:
-        # Placeholder for actual API call
-        # In a real scenario, we would use httpx.AsyncClient
-        return []
+        """
+        Lists all Retell agents.
+        """
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(
+                    f"{self.base_url}/list-agents",
+                    headers=self.headers
+                )
+                response.raise_for_status()
+                return response.json()
+            except httpx.HTTPError as e:
+                print(f"Error listing agents: {e}")
+                return []
 
     async def get_agent_details(self, agent_id: str) -> Dict[str, Any]:
-        # Placeholder for actual API call
-        return {"agent_id": agent_id}
+        """
+        Gets details for a specific Retell agent.
+        """
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.get(
+                    f"{self.base_url}/get-agent/{agent_id}",
+                    headers=self.headers
+                )
+                response.raise_for_status()
+                return response.json()
+            except httpx.HTTPError as e:
+                print(f"Error getting agent details: {e}")
+                return {}
 
     async def create_session(self, agent_id: str, metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
-        Creates a Retell web call session.
+        Creates a Retell web call session using the v2 endpoint.
         """
-        # Logic to call /create-web-call
-        return {
-            "access_token": "mock_retell_token",
-            "call_id": "mock_call_id"
-        }
+        async with httpx.AsyncClient() as client:
+            try:
+                payload = {"agent_id": agent_id}
+                if metadata:
+                    payload["metadata"] = metadata
+                
+                response = await client.post(
+                    f"{self.base_url}/v2/create-web-call",
+                    headers=self.headers,
+                    json=payload
+                )
+                response.raise_for_status()
+                return response.json()
+            except httpx.HTTPError as e:
+                print(f"Error creating web call: {e}")
+                return {}
 
     async def normalize_call_data(self, raw_payload: Dict[str, Any]) -> UnifiedCall:
         """
